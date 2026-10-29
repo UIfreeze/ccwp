@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Wanderly handoff (Version A)</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter Display"; src: url("assets/fonts/InterDisplay-Medium.otf"); font-weight: 500; }
+      @font-face { font-family: "Inter Display"; src: url("assets/fonts/InterDisplay-SemiBold.otf"); font-weight: 600; }
+      @font-face { font-family: "Inter Display"; src: url("assets/fonts/InterDisplay-Bold.otf"); font-weight: 650 700; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Regular.otf"); font-weight: 400; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-Medium.otf"); font-weight: 500; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-SemiBold.otf"); font-weight: 600; }
+      @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Regular.ttf"); font-weight: 400; }
+      @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/JetBrainsMono-Medium.ttf"); font-weight: 500; }
+      :root {
+        --ground: #0b0c0f;
+        --graphite: #15171c;
+        --panel: #181a20;
+        --panel-2: #1f222a;
+        --line: rgba(242, 238, 230, 0.1);
+        --ink: #f2eee6;
+        --muted: rgba(242, 238, 230, 0.55);
+        --faint: rgba(242, 238, 230, 0.16);
+        --ai: #4c7dff;
+        --ai-soft: rgba(76, 125, 255, 0.16);
+        --human: #f2c48d;
+        --human-soft: rgba(242, 196, 141, 0.14);
+        --font-display: "Inter Display", "Inter", sans-serif;
+        --font-text: "Inter", sans-serif;
+        --font-mono: "JetBrains Mono", monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: var(--ground);
+        -webkit-font-smoothing: antialiased;
+      }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: var(--font-text); color: var(--ink); }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+
+      /* ---------- background ---------- */
+      #bg {
+        background:
+          radial-gradient(1100px 900px at 50% 42%, #161922 0%, rgba(11,12,15,0) 70%),
+          var(--ground);
+      }
+      #grain {
+        opacity: 0.35;
+        background-image:
+          linear-gradient(rgba(242,238,230,0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(242,238,230,0.035) 1px, transparent 1px);
+        background-size: 60px 60px;
+        -webkit-mask-image: radial-gradient(800px 900px at 50% 45%, #000 0%, transparent 75%);
+                mask-image: radial-gradient(800px 900px at 50% 45%, #000 0%, transparent 75%);
+      }
+      #glow {
+        left: 140px; top: 520px; width: 800px; height: 800px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(76,125,255,0.22) 0%, rgba(76,125,255,0) 65%);
+        opacity: 0;
+      }
+
+      /* ---------- editorial kicker ---------- */
+      .kicker {
+        left: 90px; right: 90px; top: 200px; height: 170px;
+        display: flex; flex-direction: column; justify-content: flex-end;
+        font-family: var(--font-display); font-weight: 600;
+        font-size: 64px; line-height: 1.06; letter-spacing: -0.025em;
+        opacity: 0;
+      }
+      .kicker .sub { font-family: var(--font-text); font-weight: 500; font-size: 30px; letter-spacing: 0; color: var(--muted); margin-bottom: 18px; }
+      .kicker .hl { display: block; }
+      .kicker em { font-style: normal; color: var(--ai); }
+      .kicker em.h { color: var(--human); }
+
+      /* ---------- generic card pieces ---------- */
+      .bar { height: 14px; border-radius: 7px; background: var(--faint); }
+      .tag { font-family: var(--font-mono); font-size: 22px; font-weight: 500; letter-spacing: 0.02em; display: flex; align-items: center; gap: 12px; }
+      .dot { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+      .dot.ai { background: var(--ai); box-shadow: 0 0 18px rgba(76,125,255,0.8); }
+      .dot.h { background: var(--human); box-shadow: 0 0 18px rgba(242,196,141,0.6); }
+      .dot.c { background: rgba(242,238,230,0.45); }
+
+      /* ---------- scene 1: forwarded reply ---------- */
+      #fwd {
+        left: 110px; top: 700px; width: 860px;
+        background: linear-gradient(180deg, #1c1f27 0%, #16181e 100%);
+        border: 1px solid var(--line); border-radius: 28px;
+        box-shadow: 0 60px 120px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
+        padding: 44px 48px; opacity: 0;
+      }
+      #fwd .row1 { display: flex; align-items: center; gap: 22px; }
+      #fwd .avatar { width: 72px; height: 72px; border-radius: 50%; background: #2a2e38; display: flex; align-items: center; justify-content: center; }
+      #fwd .from { font-size: 30px; font-weight: 600; }
+      #fwd .meta { font-size: 24px; color: var(--muted); margin-top: 6px; }
+      #fwd .subject { margin-top: 36px; font-family: var(--font-display); font-size: 40px; font-weight: 600; letter-spacing: -0.015em; display: flex; align-items: center; gap: 16px; }
+      #fwd .subject .fw { color: var(--muted); font-weight: 500; }
+      #fwd .quote {
+        margin-top: 34px; padding: 28px 30px; border-radius: 18px;
+        background: var(--ai-soft); border-left: 4px solid var(--ai);
+      }
+      #fwd .quote .bar { margin-top: 18px; background: rgba(242,238,230,0.22); }
+
+      /* ---------- scene 2/3: 3D message field ---------- */
+      #world { perspective: 2600px; perspective-origin: 50% 40%; }
+      #grid {
+        left: 90px; top: 520px; width: 900px; height: 980px;
+        transform-style: preserve-3d; opacity: 0;
+      }
+      .wk {
+        position: absolute; top: -70px; width: 270px;
+        font-family: var(--font-mono); font-size: 26px; color: var(--muted); letter-spacing: 0.12em;
+      }
+      .mcard {
+        position: absolute; width: 260px; height: 92px; border-radius: 16px;
+        background: linear-gradient(180deg, #20242d, #191c23);
+        border: 1px solid rgba(242,238,230,0.12);
+        padding: 18px 20px; transform-style: preserve-3d;
+        box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+      }
+      .mcard .tag { font-size: 16px; color: var(--ai); gap: 8px; }
+      .mcard .dot { width: 9px; height: 9px; }
+      .mcard .bar { height: 10px; margin-top: 14px; }
+
+      /* broken path */
+      #path { left: 0; top: 560px; width: 1080px; height: 260px; opacity: 0; }
+      .chip {
+        position: absolute; height: 84px; padding: 0 30px; border-radius: 42px;
+        display: flex; align-items: center; gap: 14px;
+        font-family: var(--font-mono); font-size: 28px; font-weight: 500;
+        background: #171a21; border: 1px solid var(--line);
+      }
+      #chipAI { left: 70px; top: 88px; border-color: rgba(76,125,255,0.6); }
+      #chipP { right: 70px; top: 88px; border: 2px dashed rgba(242,238,230,0.28); color: var(--muted); }
+      #qmark {
+        left: 470px; top: 66px; width: 140px; height: 128px;
+        font-family: var(--font-display); font-weight: 600; font-size: 110px; line-height: 128px; text-align: center; color: var(--ink);
+      }
+
+      /* log viewer */
+      #logs {
+        left: 110px; top: 900px; width: 860px; height: 560px; overflow: hidden;
+        background: #111317; border: 1px solid var(--line); border-radius: 22px; opacity: 0;
+      }
+      #logs .head { position: relative; z-index: 2; background: #111317; height: 70px; display: flex; align-items: center; gap: 12px; padding: 0 28px; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 22px; color: var(--muted); }
+      #logs .head i { width: 12px; height: 12px; border-radius: 50%; background: #2c3039; display: inline-block; }
+      #logrows { position: absolute; left: 0; right: 0; top: 70px; }
+      .lrow { height: 46px; display: flex; align-items: center; gap: 18px; padding: 0 28px; font-family: var(--font-mono); font-size: 20px; color: rgba(242,238,230,0.42); }
+      .lrow .t { width: 200px; white-space: nowrap; flex: none; }
+      .lrow .k { width: 64px; flex: none; color: rgba(76,125,255,0.85); }
+      .lrow .bar { height: 9px; flex: none; background: rgba(242,238,230,0.12); }
+      #logs .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 140px; background: linear-gradient(transparent, #111317); }
+
+      /* ---------- scene 4+: the thread ---------- */
+      #thread {
+        left: 110px; top: 420px; width: 860px; height: 1150px;
+        background: linear-gradient(180deg, #1a1d24 0%, #15171c 100%);
+        border: 1px solid var(--line); border-radius: 36px; overflow: hidden;
+        box-shadow: 0 80px 160px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+        opacity: 0; transform-origin: 50% 50%;
+      }
+      #thread .hdr { position: absolute; left: 0; right: 0; top: 0; height: 170px; padding: 44px 48px 0; border-bottom: 1px solid var(--line); }
+      #thread .brand { font-family: var(--font-display); font-weight: 650; font-size: 52px; letter-spacing: -0.02em; }
+      #thread .brandsub { font-size: 26px; color: var(--muted); margin-top: 6px; }
+      #owner {
+        position: absolute; right: 44px; top: 54px; height: 62px; border-radius: 31px;
+        padding: 0 24px 0 20px; display: flex; align-items: center; gap: 12px;
+        font-family: var(--font-mono); font-size: 26px; font-weight: 500;
+        border: 1px solid rgba(76,125,255,0.55); background: var(--ai-soft);
+        overflow: hidden;
+      }
+      #owner .who { position: relative; width: 170px; height: 30px; }
+      #owner .who span { position: absolute; left: 0; top: 0; line-height: 30px; white-space: nowrap; }
+      #win { position: absolute; left: 0; right: 0; top: 171px; bottom: 0; overflow: hidden; }
+      #msgs { position: absolute; left: 0; right: 0; top: 0; }
+      .msg {
+        position: absolute; border-radius: 26px; padding: 24px 28px;
+        background: var(--panel-2); border: 1px solid rgba(242,238,230,0.08);
+      }
+      .msg .bar { margin-top: 16px; }
+      .msg .tag { font-size: 26px; }
+      .msg.ai { background: linear-gradient(180deg, rgba(76,125,255,0.20), rgba(76,125,255,0.12)); border-color: rgba(76,125,255,0.38); border-top-left-radius: 8px; }
+      .msg.ai .tag { color: #a9c0ff; }
+      .msg.ai .bar { background: rgba(200,215,255,0.26); }
+      .msg.c { border-top-right-radius: 8px; }
+      .msg.c .tag { color: var(--muted); }
+      .msg.h { background: linear-gradient(180deg, rgba(242,196,141,0.18), rgba(242,196,141,0.10)); border-color: rgba(242,196,141,0.42); border-top-left-radius: 8px; }
+      .msg.h .tag { color: var(--human); }
+      .msg.h .bar { background: rgba(255,232,205,0.26); }
+
+      #handoff { position: absolute; left: 48px; right: 48px; height: 80px; }
+      #handoff .ln { position: absolute; top: 39px; height: 2px; }
+      #handoff .ln.l { left: 0; width: 180px; background: linear-gradient(90deg, rgba(76,125,255,0), rgba(76,125,255,0.9)); }
+      #handoff .ln.r { right: 0; width: 180px; background: linear-gradient(90deg, rgba(242,196,141,0.9), rgba(242,196,141,0)); }
+      #handoff .pill {
+        position: absolute; left: 50%; top: 10px; transform: translateX(-50%); height: 60px; width: 380px;
+        border-radius: 30px; display: flex; align-items: center; justify-content: center; gap: 12px;
+        font-family: var(--font-mono); font-size: 24px; color: var(--ink);
+        background: #1d2028; border: 1px solid rgba(242,238,230,0.18);
+      }
+      #sweep { position: absolute; left: 0; right: 0; top: 0; height: 220px; background: linear-gradient(180deg, rgba(76,125,255,0), rgba(130,160,255,0.16) 60%, rgba(242,196,141,0.18)); opacity: 0; mix-blend-mode: screen; }
+
+      #bracket { position: absolute; left: 18px; top: 0; width: 12px; border-left: 3px solid var(--ai); border-top: 3px solid var(--ai); border-bottom: 3px solid var(--ai); border-radius: 8px 0 0 8px; opacity: 0; }
+
+      /* ---------- scene 7: many threads ---------- */
+      #rails { left: 0; top: 0; width: 1080px; height: 1920px; transform-style: preserve-3d; opacity: 0; }
+      .rail {
+        position: absolute; top: 560px; width: 250px; height: 900px; border-radius: 28px;
+        background: linear-gradient(180deg, #1a1d24, #14161b); border: 1px solid var(--line);
+        box-shadow: 0 40px 90px rgba(0,0,0,0.5);
+      }
+      .rail .seg { position: absolute; left: 123px; width: 4px; border-radius: 2px; }
+      .rail .seg.a { background: var(--ai); box-shadow: 0 0 16px rgba(76,125,255,0.6); }
+      .rail .seg.b { background: var(--human); box-shadow: 0 0 16px rgba(242,196,141,0.5); }
+      .rail .pt { position: absolute; left: 113px; width: 24px; height: 24px; border-radius: 50%; }
+      .rail .pt.a { background: var(--ai); }
+      .rail .pt.b { background: var(--human); }
+      .rail .node { position: absolute; left: 95px; width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--ink); background: #14161b; }
+      .rail .node::after { content: ""; position: absolute; left: 16px; top: 16px; width: 22px; height: 22px; border-radius: 50%; background: var(--human); }
+      .rail .lbl { position: absolute; left: 0; right: 0; text-align: center; font-family: var(--font-mono); font-size: 26px; color: var(--muted); }
+
+      /* ---------- scene 9: stray logs ---------- */
+      .stray { position: absolute; font-family: var(--font-mono); font-size: 20px; color: rgba(242,238,230,0.35); white-space: nowrap; opacity: 0; }
+
+      /* ---------- end card ---------- */
+      #end { opacity: 0; }
+      #endline { left: 540px; top: 560px; height: 400px; transform-origin: 50% 0; width: 4px; margin-left: -2px; border-radius: 2px; background: linear-gradient(180deg, var(--ai) 0%, var(--ai) 50%, var(--human) 50%, var(--human) 100%); }
+      #endnode { left: 510px; top: 730px; width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--ink); background: var(--ground); opacity: 0; }
+      .endtxt { left: 0; right: 0; text-align: center; font-family: var(--font-display); font-weight: 650; letter-spacing: -0.03em; }
+      #end1 { top: 1080px; font-size: 92px; }
+      #end2 { top: 1190px; font-size: 92px; color: var(--muted); }
+      #sig { left: 0; right: 0; top: 1420px; text-align: center; }
+      #sig .n { font-family: var(--font-display); font-weight: 600; font-size: 40px; letter-spacing: -0.01em; }
+      #sig .u { font-family: var(--font-mono); font-size: 24px; color: var(--muted); margin-top: 12px; }
+      #sig .rule { width: 80px; height: 2px; background: var(--faint); margin: 0 auto 34px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="44" data-width="1080" data-height="1920" data-fps="30">
+      <div id="stage" class="clip" data-start="0" data-duration="44" data-track-index="0">
+        <div id="bg" class="abs" style="inset:0"></div>
+        <div id="grain" class="abs" style="inset:0"></div>
+        <div id="glow" class="abs"></div>
+
+        <!-- 3D field -->
+        <div id="world" class="abs" style="inset:0">
+          <div id="grid" class="abs"></div>
+          <div id="rails" class="abs"></div>
+        </div>
+
+        <!-- scene 1 -->
+        <div id="fwd" class="abs">
+          <div class="row1">
+            <div class="avatar">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#f2eee6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+            </div>
+            <div>
+              <div class="from">Your customer</div>
+              <div class="meta">to you</div>
+            </div>
+          </div>
+          <div class="subject">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f2eee6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l6 6-6 6"/><path d="M21 11H9a6 6 0 0 0-6 6v2"/></svg>
+            <span><span class="fw">Fwd:</span> Reply from your screening tool</span>
+          </div>
+          <div class="quote">
+            <div class="tag" style="color:#a9c0ff"><span class="dot ai"></span>Screening tool · AI</div>
+            <div class="bar" style="width:92%"></div>
+            <div class="bar" style="width:78%"></div>
+            <div class="bar" style="width:54%"></div>
+          </div>
+        </div>
+
+        <!-- scene 3 -->
+        <div id="path" class="abs">
+          <svg class="abs" style="left:0;top:0" width="1080" height="260" viewBox="0 0 1080 260">
+            <defs>
+              <linearGradient id="gA" x1="0" x2="1"><stop offset="0" stop-color="#4c7dff" stop-opacity="0.9"/><stop offset="1" stop-color="#4c7dff" stop-opacity="0.2"/></linearGradient>
+            </defs>
+            <line id="pLeft" x1="300" y1="130" x2="470" y2="130" stroke="url(#gA)" stroke-width="4" stroke-linecap="round"/>
+            <line id="pRight" x1="610" y1="130" x2="780" y2="130" stroke="rgba(242,238,230,0.25)" stroke-width="4" stroke-dasharray="4 14" stroke-linecap="round"/>
+          </svg>
+          <div id="chipAI" class="chip"><span class="dot ai"></span>AI</div>
+          <div id="qmark" class="abs">?</div>
+          <div id="chipP" class="chip"><span class="dot c"></span>Person</div>
+        </div>
+        <div id="logs" class="abs">
+          <div class="head"><i></i><i></i><i></i><span style="margin-left:14px">logs</span></div>
+          <div id="logrows"></div>
+          <div class="fade"></div>
+        </div>
+
+        <div id="strays" class="abs" style="inset:0"></div>
+
+        <!-- scene 4+ -->
+        <div id="thread" class="abs">
+          <div class="hdr">
+            <div class="brand">Wanderly</div>
+            <div class="brandsub">Nurse staffing marketplace</div>
+            <div id="owner"><span class="dot ai" id="ownerDot"></span><div class="who"><span id="ownA">AI</span><span id="ownH" style="color:var(--human)">Recruiter</span></div></div>
+          </div>
+          <div id="win">
+            <div id="msgs"></div>
+          </div>
+        </div>
+
+        <!-- kickers -->
+        <div id="k1" class="abs kicker"><div class="sub">Forwarded</div><div class="hl">A reply from your screening tool.</div></div>
+        <div id="k2" class="abs kicker"><div class="hl">Three weeks of <em>AI</em> conversations.</div></div>
+        <div id="k3" class="abs kicker"><div class="hl">Where should <em>AI</em> stop?</div></div>
+        <div id="k4" class="abs kicker"><div class="hl">When does a <em class="h">person</em> take over?</div></div>
+        <div id="k5" class="abs kicker"><div class="sub">Step 1</div><div class="hl"><em>AI</em> screens candidates.</div></div>
+        <div id="k6" class="abs kicker"><div class="sub">Step 2</div><div class="hl">Same thread. Full context.</div></div>
+        <div id="k7" class="abs kicker"><div class="hl">Every <em>AI</em> step ends in a handoff to a <em class="h">person</em>.</div></div>
+        <div id="k8" class="abs kicker"><div class="hl">The recruiter picks up mid&#8209;thread.</div></div>
+        <div id="k9" class="abs kicker"><div class="hl">One conversation.</div></div>
+
+        <!-- end -->
+        <div id="end" class="abs" style="inset:0">
+          <div id="endline" class="abs"></div>
+          <div id="endnode" class="abs"></div>
+          <div id="end1" class="abs endtxt">One conversation.</div>
+          <div id="end2" class="abs endtxt">A clear handoff.</div>
+          <div id="sig" class="abs"><div class="rule"></div><div class="n">Deciphering Logic</div><div class="u">decipheringlogic.com</div></div>
+        </div>
+      </div>
+
+      <audio id="music" class="clip" src="assets/audio/music/music_bed.wav" data-start="0" data-duration="44" data-track-index="1" data-volume="0.8"></audio>
+      <audio id="sfx" class="clip" src="assets/audio/sfx/sfx.wav" data-start="0" data-duration="44" data-track-index="2" data-volume="1"></audio>
+    </div>
+
+    <script>
+      // ---------- deterministic helpers ----------
+      let seed = 7;
+      const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+      const $ = (s) => document.querySelector(s);
+      const el = (tag, cls, parent, style) => { const e = document.createElement(tag); if (cls) e.className = cls; if (style) e.setAttribute("style", style); parent.appendChild(e); return e; };
+      const bars = (parent, widths) => widths.forEach((w) => el("div", "bar", parent, `width:${w}%`));
+
+      // ---------- build 3D message field ----------
+      const grid = $("#grid");
+      const cards = [];
+      ["WEEK 1", "WEEK 2", "WEEK 3"].forEach((w, c) => {
+        const lbl = el("div", "wk", grid, `left:${c * 320}px`); lbl.textContent = w;
+        for (let r = 0; r < 8; r++) {
+          const layers = 1 + ((r + c * 3) % 3) + (c === 2 ? 1 : 0);
+          for (let k = 0; k < layers; k++) {
+            const m = el("div", "mcard", grid, `left:${c * 320}px;top:${r * 118}px`);
+            const t = el("div", "tag", m); el("span", "dot ai", t); t.appendChild(document.createTextNode("AI"));
+            bars(m, [60 + rnd() * 35]);
+            cards.push({ e: m, c, r, k });
+          }
+        }
+      });
+
+      // ---------- log rows ----------
+      const logrows = $("#logrows");
+      const kinds = ["ai", "ai", "ai", "msg", "ai", "msg"];
+      for (let i = 0; i < 26; i++) {
+        const row = el("div", "lrow", logrows);
+        const t = el("span", "t", row); t.textContent = `wk${1 + Math.floor(i / 9)} · ${String(8 + (i * 7) % 11).padStart(2, "0")}:${String((i * 17) % 60).padStart(2, "0")}`;
+        const k = el("span", "k", row); k.textContent = kinds[i % kinds.length];
+        el("div", "bar", row, `width:${180 + Math.floor(rnd() * 360)}px`);
+      }
+
+      // ---------- thread messages ----------
+      const msgs = $("#msgs");
+      const spec = [
+        { id: "m1", t: "ai", w: 600, h: 128, b: [88, 64] },
+        { id: "m2", t: "c", w: 450, h: 98, b: [80] },
+        { id: "m3", t: "ai", w: 640, h: 128, b: [92, 58] },
+        { id: "m4", t: "c", w: 400, h: 98, b: [72] },
+        { id: "m5", t: "ai", w: 560, h: 128, b: [84, 46] },
+        { id: "handoff" },
+        { id: "m6", t: "h", w: 620, h: 128, b: [90, 62] },
+        { id: "m7", t: "c", w: 440, h: 98, b: [76] },
+      ];
+      const label = { ai: ["dot ai", "AI"], c: ["dot c", "Candidate"], h: ["dot h", "Recruiter"] };
+      let y = 40;
+      const pos = {};
+      spec.forEach((s) => {
+        if (s.id === "handoff") {
+          const h = el("div", "", msgs); h.id = "handoff"; h.style.top = y + "px";
+          el("div", "ln l", h); el("div", "ln r", h);
+          const p = el("div", "pill", h); p.innerHTML = '<span class="dot h"></span>Handed to recruiter';
+          pos.handoff = y; y += 80 + 26; return;
+        }
+        const m = el("div", "msg " + s.t, msgs, `width:${s.w}px;height:${s.h}px;top:${y}px;` + (s.t === "c" ? "right:48px" : "left:48px"));
+        m.id = s.id;
+        const tg = el("div", "tag", m); el("span", label[s.t][0], tg); tg.appendChild(document.createTextNode(label[s.t][1]));
+        bars(m, s.b);
+        pos[s.id] = y; y += s.h + 26;
+      });
+      const sweep = el("div", "", msgs); sweep.id = "sweep";
+      const bracket = el("div", "", msgs); bracket.id = "bracket";
+      bracket.style.top = pos.m1 + "px"; bracket.style.height = (pos.m5 + 128 - pos.m1) + "px";
+      const bl = el("div", "", msgs, `position:absolute;left:-2px;top:${pos.m1}px;font-family:var(--font-mono);font-size:18px;color:#a9c0ff;opacity:0`);
+      bl.id = "bracketLbl";
+
+      // ---------- rails (many threads) ----------
+      const rails = $("#rails");
+      const railDefs = [ { x: 95, a: 3, z: -160 }, { x: 415, a: 4, z: 0 }, { x: 735, a: 2, z: -160 } ];
+      railDefs.forEach((d, i) => {
+        const r = el("div", "rail", rails, `left:${d.x}px`); r.id = "rail" + i;
+        const lbl = el("div", "lbl", r, "top:34px"); lbl.textContent = "thread " + (i + 1);
+        const top = 110, step = 92, nodeY = top + d.a * step;
+        el("div", "seg a", r, `top:${top}px;height:${nodeY - top}px`);
+        for (let k = 0; k < d.a; k++) el("div", "pt a", r, `top:${top + k * step - 12}px`);
+        el("div", "node", r, `top:${nodeY - 30}px`);
+        el("div", "seg b", r, `top:${nodeY + 30}px;height:${900 - 90 - nodeY - 30}px`);
+        for (let k = 1; k <= 3; k++) el("div", "pt b", r, `top:${nodeY + k * step - 12}px`);
+      });
+
+      // ---------- stray log fragments ----------
+      const strays = $("#strays");
+      const strayTxt = ["ai · reply", "msg · sent", "ai · reply", "log 0412", "ai · follow-up", "msg · read", "ai · reply", "log 0413"];
+      const strayPos = [[40, 1620], [760, 1660], [70, 1730], [700, 1780], [20, 900], [900, 1000], [300, 1840], [600, 1600]];
+      strayTxt.forEach((t, i) => { const s = el("div", "stray", strays, `left:${strayPos[i][0]}px;top:${strayPos[i][1]}px`); s.textContent = t; });
+
+      // =====================================================
+      //  TIMELINE  (seconds; retime here when the VO lands)
+      // =====================================================
+      const T = {
+        s1: 0.0, s2: 3.8, s3: 9.2, k4: 12.6, flush: 15.2, s4: 15.9, s5: 18.4, s6: 21.0,
+        s7: 24.2, s8: 30.4, s9: 33.8, end: 38.2, out: 44.0,
+      };
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const kin = (sel, t) => tl.fromTo(sel, { opacity: 0, y: 26, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "power3.out" }, t);
+      const kout = (sel, t) => tl.to(sel, { opacity: 0, y: -18, filter: "blur(8px)", duration: 0.45, ease: "power2.in" }, t);
+
+      // background breathe
+      
+
+      // ----- S1: forwarded reply -----
+      tl.fromTo("#fwd", { opacity: 0.55, y: 60, scale: 0.96, filter: "blur(6px)" }, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "expo.out" }, 0);
+      tl.fromTo("#fwd .quote", { boxShadow: "0 0 0 0 rgba(76,125,255,0)" }, { boxShadow: "0 0 0 6px rgba(76,125,255,0.18)", duration: 0.5, ease: "power2.out", yoyo: true, repeat: 1 }, 1.7);
+      tl.fromTo("#fwd .quote .bar", { scaleX: 0, transformOrigin: "0 50%" }, { scaleX: 1, duration: 0.6, stagger: 0.12, ease: "power3.out" }, 0.6);
+      tl.fromTo("#k1", { opacity: 0.5, y: 14, filter: "blur(4px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power3.out" }, 0);
+      tl.to("#fwd", { scale: 1.04, duration: 2.3, ease: "none" }, 1.06);
+      kout("#k1", T.s2 - 0.35);
+
+      // ----- S2: three weeks of messages -----
+      tl.to("#fwd", { opacity: 0, scale: 0.55, y: 260, filter: "blur(10px)", duration: 0.8, ease: "power3.in" }, T.s2 - 0.4);
+      gsap.set("#grid", { rotationX: 56, rotationZ: -36, z: -200, x: -40, y: 60, scale: 0.86, transformPerspective: 2600 });
+      tl.fromTo("#grid", { opacity: 0 }, { opacity: 1, duration: 0.4 }, T.s2);
+      tl.fromTo(".wk", { opacity: 0 }, { opacity: 1, duration: 0.5, stagger: 1.4 }, T.s2 + 0.1);
+      cards.forEach((o, i) => {
+        const t = T.s2 + 0.15 + o.c * 1.45 + o.r * 0.13 + o.k * 0.05;
+        tl.fromTo(o.e, { opacity: 0, z: 260 + o.k * 40, y: -20 }, { opacity: 1, z: o.k * 26, y: 0, duration: 0.55, ease: "power3.out" }, t);
+      });
+      tl.to("#grid", { rotationZ: -30, z: -60, duration: 5.6, ease: "sine.inOut" }, T.s2);
+      kin("#k2", T.s2 + 0.3);
+      kout("#k2", T.s3 - 0.3);
+
+      // ----- S3: logs + missing boundary -----
+      cards.forEach((o) => {
+        const dx = (rnd() - 0.5) * 900, dy = (rnd() - 0.5) * 900, dz = (rnd() - 0.2) * 700;
+        tl.to(o.e, { x: dx, y: dy, z: dz, rotationZ: (rnd() - 0.5) * 70, rotationX: (rnd() - 0.5) * 50, opacity: 0.12 + rnd() * 0.25, duration: 2.4, ease: "power2.inOut" }, T.s3 + rnd() * 0.4);
+      });
+      tl.to("#grid", { filter: "blur(3px)", duration: 1.6 }, T.s3 + 0.8);
+      tl.fromTo("#logs", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, T.s3 + 0.2);
+      tl.fromTo("#logrows", { y: 0 }, { y: -720, duration: 5.6, ease: "power1.inOut" }, T.s3 + 0.2);
+      tl.fromTo("#path", { opacity: 0 }, { opacity: 1, duration: 0.5 }, T.s3 + 0.9);
+      tl.fromTo("#chipAI", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, T.s3 + 0.9);
+      tl.fromTo("#pLeft", { attr: { x2: 300 } }, { attr: { x2: 470 }, duration: 0.9, ease: "power2.out" }, T.s3 + 1.3);
+      tl.fromTo("#qmark", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" }, T.s3 + 2.1);
+      tl.to("#qmark", { opacity: 0.35, duration: 0.5, yoyo: true, repeat: 5, ease: "sine.inOut" }, T.s3 + 2.8);
+      tl.fromTo("#chipP", { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, T.k4 - 0.2);
+      tl.fromTo("#pRight", { opacity: 0 }, { opacity: 1, duration: 0.6 }, T.k4);
+      kin("#k3", T.s3 + 0.5);
+      kout("#k3", T.k4 - 0.4);
+      kin("#k4", T.k4);
+      kout("#k4", T.flush - 0.1);
+
+      // ----- flush: everything collapses toward one point -----
+      tl.to(["#path", "#logs"], { opacity: 0, scale: 0.8, filter: "blur(12px)", duration: 0.6, ease: "power3.in" }, T.flush);
+      cards.forEach((o) => tl.to(o.e, { x: 0, y: 0, z: 400, opacity: 0, rotationZ: 0, rotationX: 0, duration: 0.8, ease: "power3.in" }, T.flush + rnd() * 0.15));
+      tl.to("#grid", { opacity: 0, duration: 0.3 }, T.flush + 0.7);
+      tl.fromTo("#glow", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out" }, T.flush + 0.4);
+
+      // ----- S4: Wanderly — one structured thread -----
+      tl.fromTo("#thread", { opacity: 0, scale: 0.86, y: 60, filter: "blur(16px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 1.0, ease: "expo.out" }, T.s4);
+      tl.fromTo("#thread .brand", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, T.s4 + 0.3);
+      tl.fromTo("#thread .brandsub", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, T.s4 + 0.5);
+      tl.fromTo("#owner", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, T.s4 + 0.8);
+      gsap.set("#ownH", { y: 34, opacity: 0 });
+      gsap.set(["#handoff", "#m6", "#m7"], { opacity: 0 });
+
+      // ----- S5: AI screens (scattered pieces settle into order) -----
+      const settle = [["#m1", -260, -340, -14], ["#m2", 300, -220, 10], ["#m3", -340, 120, 8], ["#m4", 280, 260, -12], ["#m5", -200, 420, 6]];
+      settle.forEach(([s, dx, dy, rot], i) => {
+        tl.fromTo(s, { opacity: 0, x: dx, y: dy, rotation: rot, filter: "blur(10px)" }, { opacity: 1, x: 0, y: 0, rotation: 0, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, T.s4 + 0.35 + i * 0.3);
+      });
+      kin("#k5", T.s5 - 0.2);
+      tl.fromTo("#m1, #m3, #m5", { boxShadow: "0 0 0 0 rgba(76,125,255,0)" }, { boxShadow: "0 0 40px 0 rgba(76,125,255,0.35)", duration: 0.5, stagger: 0.25, yoyo: true, repeat: 1 }, T.s5 + 0.4);
+      kout("#k5", T.s6 - 0.3);
+
+      // ----- S6: the handoff (climax) -----
+      tl.fromTo("#handoff", { opacity: 0 }, { opacity: 1, duration: 0.3 }, T.s6);
+      tl.fromTo("#handoff .ln.l", { scaleX: 0, transformOrigin: "0 50%" }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, T.s6);
+      tl.fromTo("#handoff .pill", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.8)" }, T.s6 + 0.3);
+      tl.fromTo("#handoff .ln.r", { scaleX: 0, transformOrigin: "0 50%" }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, T.s6 + 0.6);
+      // ownership indicator AI -> Recruiter
+      tl.to("#ownA", { y: -34, opacity: 0, duration: 0.45, ease: "power3.in" }, T.s6 + 0.5);
+      tl.to("#ownH", { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, T.s6 + 0.75);
+      tl.to("#owner", { borderColor: "rgba(242,196,141,0.6)", backgroundColor: "rgba(242,196,141,0.12)", duration: 0.5 }, T.s6 + 0.6);
+      tl.to("#ownerDot", { backgroundColor: "#f2c48d", boxShadow: "0 0 18px rgba(242,196,141,0.6)", duration: 0.5 }, T.s6 + 0.6);
+      // continuity sweep down the existing thread
+      tl.fromTo("#sweep", { opacity: 0, y: pos.m1 - 120 }, { opacity: 1, y: pos.handoff - 60, duration: 0.9, ease: "power2.inOut" }, T.s6 + 0.2);
+      tl.to("#sweep", { opacity: 0, duration: 0.4 }, T.s6 + 1.1);
+      tl.fromTo("#m6", { opacity: 0, y: 40, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, T.s6 + 1.2);
+      kin("#k6", T.s6 + 0.9);
+      kout("#k6", T.s7 - 0.3);
+
+      // ----- S7: every AI step ends in a handoff -----
+      tl.to("#thread", { scale: 0.36, y: -40, opacity: 0, filter: "blur(6px)", duration: 0.9, ease: "power3.inOut" }, T.s7);
+      gsap.set("#rails", { rotationX: 24, rotationY: 0, transformPerspective: 2600 });
+      tl.fromTo("#rails", { opacity: 0 }, { opacity: 1, duration: 0.3 }, T.s7 + 0.4);
+      [0, 1, 2].forEach((i) => {
+        const r = `#rail${i}`;
+        tl.fromTo(r, { opacity: 0, y: 120, z: railDefs[i].z - 200 }, { opacity: 1, y: 0, z: railDefs[i].z, duration: 0.9, ease: "expo.out" }, T.s7 + 0.4 + i * 0.15);
+        tl.fromTo(`${r} .seg.a, ${r} .pt.a`, { opacity: 0 }, { opacity: 1, duration: 0.25, stagger: 0.12 }, T.s7 + 0.9 + i * 0.2);
+        tl.fromTo(`${r} .node`, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.2)" }, T.s7 + 2.0 + i * 0.35);
+        tl.fromTo(`${r} .seg.b`, { scaleY: 0, transformOrigin: "50% 0" }, { scaleY: 1, duration: 0.7, ease: "power3.out" }, T.s7 + 2.3 + i * 0.35);
+        tl.fromTo(`${r} .pt.b`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, stagger: 0.12, ease: "back.out(2)" }, T.s7 + 2.5 + i * 0.35);
+      });
+      tl.to("#rails", { rotationX: 14, duration: 5.4, ease: "sine.inOut" }, T.s7);
+      kin("#k7", T.s7 + 0.5);
+      kout("#k7", T.s8 - 0.7);
+
+      // ----- S8: recruiter picks up mid-thread with everything the AI said -----
+      tl.to("#rails", { opacity: 0, scale: 1.2, filter: "blur(10px)", duration: 0.55, ease: "power3.in" }, T.s8 - 0.65);
+      tl.fromTo("#thread", { scale: 1.35, y: 0, opacity: 0, filter: "blur(10px)" }, { immediateRender: false, scale: 1, y: 0, opacity: 1, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, T.s8);
+      tl.fromTo("#msgs", { y: -300 }, { immediateRender: false, y: 0, duration: 1.8, ease: "power2.inOut" }, T.s8 + 0.3);
+      tl.fromTo("#bracket", { opacity: 0, scaleY: 0, transformOrigin: "50% 0" }, { opacity: 1, scaleY: 1, duration: 0.7, ease: "power3.out" }, T.s8 + 1.4);
+      tl.fromTo("#m1, #m3, #m5", { boxShadow: "0 0 0 0 rgba(76,125,255,0)" }, { immediateRender: false, boxShadow: "0 0 34px 0 rgba(76,125,255,0.32)", duration: 0.45, stagger: 0.18, yoyo: true, repeat: 1 }, T.s8 + 1.6);
+      tl.to("#msgs", { y: -150, duration: 1.0, ease: "power2.inOut" }, T.s8 + 2.6);
+      tl.fromTo("#m7", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "expo.out" }, T.s8 + 3.0);
+      kin("#k8", T.s8 + 0.2);
+      kout("#k8", T.s9 - 0.3);
+
+      // ----- S9: one conversation, not a pile of logs -----
+      tl.fromTo(".stray", { opacity: 0 }, { opacity: 1, duration: 0.4, stagger: 0.08 }, T.s9);
+      document.querySelectorAll(".stray").forEach((s, i) => {
+        const r = s.getBoundingClientRect();
+        tl.to(s, { x: 540 - r.left - r.width / 2, y: 990 - r.top, scale: 0.4, opacity: 0, filter: "blur(6px)", duration: 1.0, ease: "power3.in" }, T.s9 + 1.4 + i * 0.07);
+      });
+      tl.to("#thread", { boxShadow: "0 80px 160px rgba(0,0,0,0.6), 0 0 0 2px rgba(242,238,230,0.12)", duration: 0.6 }, T.s9 + 2.4);
+      kin("#k9", T.s9 + 0.3);
+      tl.to("#thread", { scale: 1.03, duration: 2.6, ease: "sine.inOut" }, T.s9 + 1.2);
+
+      // ----- END -----
+      kout("#k9", T.end - 0.3);
+      tl.to("#thread", { opacity: 0, scale: 0.92, filter: "blur(10px)", duration: 0.7, ease: "power3.in" }, T.end - 0.3);
+      tl.to("#glow", { opacity: 0.55, duration: 1.0 }, T.end);
+      tl.fromTo("#end", { opacity: 0 }, { opacity: 1, duration: 0.3 }, T.end + 0.3);
+      tl.fromTo("#endline", { scaleY: 0 }, { scaleY: 1, duration: 1.0, ease: "power3.inOut" }, T.end + 0.3);
+      tl.fromTo("#endnode", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.2)" }, T.end + 0.8);
+      tl.fromTo("#end1", { opacity: 0, y: 30, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out" }, T.end + 1.0);
+      tl.fromTo("#end2", { opacity: 0, y: 30, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out" }, T.end + 1.5);
+      tl.fromTo("#sig", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, T.end + 2.4);
+      tl.fromTo("#end1, #end2", { scale: 1 }, { scale: 1.035, duration: 4.0, ease: "sine.inOut", immediateRender: false }, T.end + 1.8);
+      tl.to("#stage", { opacity: 0, duration: 0.6, ease: "power1.in" }, T.out - 0.6);
+      tl.set({}, {}, T.out);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
