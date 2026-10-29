@@ -1,4 +1,14 @@
-# Timed storyboard: Version A (9:16, 1080×1920, 30 fps, 44.0 s)
+# Timed storyboard: Version A
+
+> **v4 note:** the shot list below is the v3 plan. The v4 premium pass keeps the same 10 beats, re-timed to the voiceover (see `docs/01_research_script/script_and_vo_timing.md`, "Voiceover as produced"), and adds:
+> - glass materials, film grain and a continuous 3D camera;
+> - the "Can you explain what it said?" beat;
+> - the pedestal layer-merge reveal and the light-flare turn;
+> - the DL logo lock-up.
+>
+> The palette moves to DL green and crimson: crimson is now the "person" colour.
+
+## v3 shot plan (9:16, 1080×1920, 30 fps, 44.0 s)
 
 **Design system**
 - **Ground:** graphite #0b0c0f. **Text:** warm white #f2eee6.
