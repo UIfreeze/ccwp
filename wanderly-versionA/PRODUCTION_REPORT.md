@@ -1,6 +1,23 @@
-# Version A: production report (v4, premium pass)
+# Version A: production report (v5)
 
-**Deliverable:** `exports/DecipheringLogic_Wanderly_VersionA_9x16_v4.mp4`
+## v5 changes (feedback: fill the blank spaces with conversations; dynamic captions)
+- **Sample conversations everywhere** (fictional names and messages; the thread is labelled "Sample conversation"):
+  - **Forwarded email.** The customer asks "Did your system promise her nights? We never approved that." The AI reply reads "Congrats Maria, you're confirmed for night shifts at the rate we discussed."
+  - **"Can't explain" card.** An AI message scrambles into glyphs as the narrator says "you can't explain what it said".
+  - **3D field and log viewer.** Readable AI and candidate snippets.
+  - **Wanderly thread.** A full screening chat: licence → experience → "I'm passing you to a recruiter". Then the handoff divider, and the recruiter's "Hi Maria, I'm Jordan. I've read everything above…". The thread auto-scrolls like a real chat.
+- **Dynamic captions:**
+  - Word-by-word, locked to the narration, in short chunks of up to 5 words.
+  - The spoken word lights up with a small lift. "AI" turns blue; person, recruiter, human, handoff and "one" turn crimson.
+  - Each chunk eases in and out with blur and motion, and never overlaps the next.
+  - A soft gradient band keeps them readable over any shot. They sit above LinkedIn's bottom UI.
+- **File:** `exports/DecipheringLogic_Wanderly_VersionA_9x16_v5.mp4`. 45.0 s, 1080×1920, 30 fps, −16.5 LUFS, peak −1.7 dBFS, 0 black frames.
+
+---
+
+# v4 notes (premium pass)
+
+**Deliverable (v4, superseded by v5):** `exports/DecipheringLogic_Wanderly_VersionA_9x16_v4.mp4`
 - 45.0 s, 1080×1920 (9:16), 30 fps constant
 - H.264 with AAC 48 kHz stereo, 24.7 MB
 - Posters: `exports/poster_handoff.png`, `exports/poster_endcard.png`
