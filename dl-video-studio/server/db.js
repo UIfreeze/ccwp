@@ -68,6 +68,21 @@ const MIGRATIONS = [
   );
   CREATE INDEX audit_project ON audit_events(project_id, id);
   `,
+  // 2 — Milestone 2 production workspace. One table, typed by `kind`, validated against server/workspace-schema.js.
+  `
+  CREATE TABLE workspace_items (
+    id         TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    kind       TEXT NOT NULL,
+    position   INTEGER NOT NULL,
+    data       TEXT NOT NULL DEFAULT '{}',
+    created_by TEXT REFERENCES users(id),
+    updated_by TEXT REFERENCES users(id),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+  CREATE INDEX workspace_project_kind ON workspace_items(project_id, kind, position);
+  `,
 ];
 
 export function openDatabase(file = ':memory:') {

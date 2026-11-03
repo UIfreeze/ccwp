@@ -22,7 +22,7 @@ const ROUTES = [
   [/^\/projects\/?$/, () => dashboardView(ctx())],
   [/^\/projects\/new$/, () => projectFormView(ctx())],
   [/^\/projects\/([\w-]+)\/edit$/, (id) => projectFormView(ctx(), id)],
-  [/^\/projects\/([\w-]+)$/, (id) => projectView(ctx(), id)],
+  [/^\/projects\/([\w-]+)(?:\/(concepts|script|shots|prompts|assets|checklist))?$/, (id, tab) => projectView(ctx(), id, tab)],
   [/^\/(preview|review|assets|knowledge)$/, (key) => plannedView(key)],
 ];
 

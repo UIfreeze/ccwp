@@ -1,6 +1,18 @@
 // Project overview: brief, production stage, team and activity log.
 import { h, statusBadge, fmtDate, fmtDuration, LABELS } from '../dom.js';
 import { api } from '../api.js';
+import { workspaceTab } from './workspace.js';
+
+export const TABS = [
+  ['overview', 'Overview', null],
+  ['concepts', 'Concepts', 'concept'],
+  ['script', 'Script & storyboard', 'scene'],
+  ['shots', 'Shot list', 'shot'],
+  ['prompts', 'Prompts', 'prompt'],
+  ['assets', 'Assets', 'asset'],
+  ['checklist', 'Checklist', 'checklist'],
+];
+let schemaCache = null;
 
 const PIPELINE = ['brief', 'concept', 'script', 'storyboard', 'production', 'review', 'approved', 'delivered'];
 
@@ -11,10 +23,18 @@ const ACTIONS = {
   'member.added': (m) => `added ${m.name} as ${LABELS.role[m.role]}`,
   'member.role_changed': (m) => `changed ${m.name} from ${LABELS.role[m.previous]} to ${LABELS.role[m.role]}`,
   'member.removed': (m) => `removed ${m.name}`,
+  'workspace.created': (m) => `added ${KIND_NAMES[m.kind]} “${m.title}”`,
+  'workspace.updated': (m) => (m.kind === 'checklist' && 'done' in m ? `${m.done ? 'ticked' : 'unticked'} “${m.title}”` : `edited ${KIND_NAMES[m.kind]} “${m.title}”`),
+  'workspace.deleted': (m) => `deleted ${KIND_NAMES[m.kind]} “${m.title}”`,
+  'workspace.checklist_added': (m) => `added the standard checklist (${m.added} items)`,
 };
+const KIND_NAMES = { concept: 'concept', scene: 'scene', shot: 'shot', prompt: 'prompt', asset: 'asset', checklist: 'checklist item' };
 
-export async function projectView({ navigate }, id) {
-  const [{ project: p }, { events }] = await Promise.all([api(`/api/projects/${id}`), api(`/api/projects/${id}/activity`)]);
+export async function projectView({ navigate }, id, tab = 'overview') {
+  const [{ project: p }, { events }, { items }, schema] = await Promise.all([
+    api(`/api/projects/${id}`), api(`/api/projects/${id}/activity`), api(`/api/projects/${id}/workspace`),
+    schemaCache ?? api('/api/workspace-schema').then((r) => (schemaCache = r.schema)),
+  ]);
   const container = h('div');
   const rerender = () => navigate(`/projects/${id}`);
 
@@ -62,11 +82,41 @@ export async function projectView({ navigate }, id) {
     h('span', {}, h('strong', {}, e.actor_name || 'System'), ' ', (ACTIONS[e.action] || (() => e.action))(e.metadata)),
     h('span', { class: 'small muted' }, fmtDate(e.created_at, true)))) : h('li', { class: 'muted' }, 'No activity yet.'));
 
-  container.append(
-    h('div', { class: 'page-head' },
+  const tabs = h('nav', { class: 'tabs', 'aria-label': 'Project sections' }, TABS.map(([key, label, kind]) => {
+    const n = kind ? items[kind].length : null;
+    const doneN = kind === 'checklist' ? items.checklist.filter((i) => i.data.done).length : null;
+    return h('a', { href: `#/projects/${id}${key === 'overview' ? '' : `/${key}`}`, 'aria-current': key === tab ? 'page' : false },
+      label, n ? h('span', { class: 'count' }, kind === 'checklist' ? `${doneN}/${n}` : n) : null);
+  }));
+
+  const head = h('div', { class: 'page-head' },
       h('div', {}, h('h1', {}, p.name), h('p', {}, p.description || 'No description.')),
       h('div', { class: 'chips' }, statusBadge(p.status), h('span', { class: 'badge' }, `You: ${LABELS.role[p.my_role]}`),
-        p.permissions.edit ? h('a', { class: 'btn', href: `#/projects/${id}/edit` }, 'Edit brief') : null)),
+        p.permissions.edit ? h('a', { class: 'btn', href: `#/projects/${id}/edit` }, 'Edit brief') : null));
+
+  const kind = TABS.find(([k]) => k === tab)?.[2];
+  if (kind) {
+    const slot = h('div');
+    const draw = (its) => slot.replaceChildren(workspaceTab({
+      projectId: id, project: p, kind, schema, items: its, canEdit: p.permissions.edit,
+      reload: async () => {
+        const fresh = (await api(`/api/projects/${id}/workspace`)).items;
+        draw(fresh);
+        tabs.querySelectorAll('a').forEach((a, i) => {
+          const k = TABS[i][2];
+          if (!k) return;
+          const n = fresh[k].length;
+          a.querySelector('.count')?.remove();
+          if (n) a.append(h('span', { class: 'count' }, k === 'checklist' ? `${fresh.checklist.filter((x) => x.data.done).length}/${n}` : n));
+        });
+      },
+    }));
+    draw(items);
+    container.append(head, tabs, slot);
+    return container;
+  }
+
+  container.append(head, tabs,
     pipeline,
     h('div', { class: 'detail' },
       h('section', { class: 'card', 'aria-labelledby': 'brief-h' },
@@ -75,7 +125,7 @@ export async function projectView({ navigate }, id) {
           `The brief is missing: ${missing.map((k) => k.replace('_', ' ')).join(', ')}. Fill these in before concept work.`) : null,
         brief,
         h('div', { class: 'alert warn mt-4' },
-          'Workspace sections for concepts, script, storyboard, shot list and prompts arrive in Milestone 2. Review uploads arrive in Milestone 4.')),
+          'Video uploads, timecoded comments and approvals arrive with DL Review Studio in Milestone 4.')),
       h('div', { class: 'stack' },
         h('section', { class: 'card', 'aria-labelledby': 'team-h' }, h('h2', { id: 'team-h' }, 'Team'), members, addForm),
         h('section', { class: 'card', 'aria-labelledby': 'act-h' }, h('h2', { id: 'act-h' }, 'Activity'), activity))));

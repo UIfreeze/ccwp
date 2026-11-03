@@ -46,3 +46,19 @@ export function fmtDuration(sec) {
   const m = Math.floor(sec / 60), s = sec % 60;
   return m ? `${m}m ${String(s).padStart(2, '0')}s` : `${s}s`;
 }
+
+const WORD_FIX = { '3d': '3D', ui: 'UI', sfx: 'SFX', qa: 'QA', ai: 'AI', cta: 'CTA' };
+/** 'medium_close_up' → 'Medium close up', 'ai_video' → 'AI video'. */
+export function humanize(value) {
+  if (value === null || value === undefined || value === '') return '';
+  const words = String(value).split('_').map((w) => WORD_FIX[w] || w);
+  const first = words[0];
+  words[0] = first === first.toUpperCase() ? first : first[0].toUpperCase() + first.slice(1);
+  return words.join(' ');
+}
+
+/** Spoken-word estimate at ~150 words per minute (2.5 words/second). */
+export function spokenSeconds(text) {
+  const words = (text || '').trim().split(/\s+/).filter(Boolean).length;
+  return { words, seconds: Math.ceil(words / 2.5) };
+}

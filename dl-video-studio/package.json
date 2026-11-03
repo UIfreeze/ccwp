@@ -10,6 +10,7 @@
     "dev": "node --disable-warning=ExperimentalWarning --watch server/index.js",
     "create-admin": "node --disable-warning=ExperimentalWarning scripts/create-admin.js",
     "seed": "node --disable-warning=ExperimentalWarning scripts/seed-demo.js",
+    "seed-workspace": "node --disable-warning=ExperimentalWarning scripts/seed-workspace-demo.js",
     "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.js"
   },
   "license": "UNLICENSED"

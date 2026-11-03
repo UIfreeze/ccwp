@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { openDatabase } from '../server/db.js';
 import { createUser } from '../server/auth.js';
 import { createProject, addMember, updateProject } from '../server/projects.js';
+import { seedWorkspaceDemo } from './seed-workspace-demo.js';
 
 const db = openDatabase(process.env.DLVS_DB || fileURLToPath(new URL('../data/studio.sqlite', import.meta.url)));
 if (db.prepare('SELECT COUNT(*) AS n FROM users').get().n) {
@@ -43,4 +44,5 @@ createProject(db, admin, {
   aspect_ratios: ['16:9', '1:1'],
   duration_seconds: 90,
 });
+seedWorkspaceDemo(db);
 console.log('Seeded synthetic demo data. Sign in as admin@demo.local, editor@demo.local, reviewer@demo.local or outsider@demo.local.');

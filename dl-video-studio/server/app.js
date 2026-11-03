@@ -14,6 +14,10 @@ import {
 import {
   validateProject, validateMemberInput, PROJECT_STATUSES, PLATFORMS, ASPECT_RATIOS, PROJECT_ROLES,
 } from './validate.js';
+import { WORKSPACE } from './workspace-schema.js';
+import {
+  getWorkspace, createItem, updateItem, deleteItem, moveItem, addDefaultChecklist,
+} from './workspace.js';
 
 const PUBLIC_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'public');
 const MUTATING = new Set(['POST', 'PATCH', 'PUT', 'DELETE']);
@@ -43,6 +47,21 @@ export function createApp({ db, secureCookies = false, version = '0.1.0' }) {
     })],
     ['DELETE', /^\/api\/projects\/([\w-]+)\/members\/([\w-]+)$/, ({ user, params }) => ({
       project: removeMember(db, user, params[0], params[1]),
+    })],
+    ['GET', /^\/api\/workspace-schema$/, () => ({ schema: WORKSPACE })],
+    ['GET', /^\/api\/projects\/([\w-]+)\/workspace$/, ({ user, params }) => ({ items: getWorkspace(db, user, params[0]) })],
+    ['POST', /^\/api\/projects\/([\w-]+)\/workspace\/checklist\/defaults$/, ({ user, params }) => ({
+      items: addDefaultChecklist(db, user, params[0]),
+    })],
+    ['POST', /^\/api\/projects\/([\w-]+)\/workspace\/(\w+)$/, async ({ user, req, params }) => ({
+      item: createItem(db, user, params[0], params[1], await readJson(req)),
+    }), { status: 201 }],
+    ['PATCH', /^\/api\/projects\/([\w-]+)\/workspace\/(\w+)\/([\w-]+)$/, async ({ user, req, params }) => ({
+      item: updateItem(db, user, params[0], params[1], params[2], await readJson(req)),
+    })],
+    ['DELETE', /^\/api\/projects\/([\w-]+)\/workspace\/(\w+)\/([\w-]+)$/, ({ user, params }) => deleteItem(db, user, params[0], params[1], params[2])],
+    ['POST', /^\/api\/projects\/([\w-]+)\/workspace\/(\w+)\/([\w-]+)\/move$/, async ({ user, req, params }) => ({
+      items: moveItem(db, user, params[0], params[1], params[2], (await readJson(req)).direction),
     })],
   ];
 
