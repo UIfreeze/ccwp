@@ -1,0 +1,16 @@
+{
+  "name": "dl-video-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-first internal video-production workspace for Deciphering Logic, with the in-house DL Review Studio module.",
+  "type": "module",
+  "engines": { "node": ">=22.5.0" },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/index.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server/index.js",
+    "create-admin": "node --disable-warning=ExperimentalWarning scripts/create-admin.js",
+    "seed": "node --disable-warning=ExperimentalWarning scripts/seed-demo.js",
+    "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.js"
+  },
+  "license": "UNLICENSED"
+}

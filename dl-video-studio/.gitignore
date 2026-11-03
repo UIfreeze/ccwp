@@ -1,0 +1,14 @@
+node_modules/
+data/
+exports/
+.env
+*.sqlite
+*.sqlite-*
+*.db
+# Large media never goes into git; sample-assets holds only small synthetic files.
+*.mp4
+*.mov
+*.mxf
+*.wav
+# Local-only reference material (private links, handbook copies).
+docs/private/

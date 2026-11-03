@@ -1,0 +1,60 @@
+/* Design tokens. Placeholder palette — replace with approved DL brand values once supplied (see docs/KNOWN_LIMITATIONS.md). */
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --surface-2: #efede8;
+  --border: #e0ddd5;
+  --text: #1b1f2a;
+  --text-muted: #5f6472;
+  --accent: #b23a63;        /* used for primary actions and focus */
+  --accent-soft: #f7e3ea;
+  --accent-text: #ffffff;
+  --ok: #2f7d4f;
+  --ok-soft: #e1f1e7;
+  --warn: #9a6400;
+  --warn-soft: #fbefd6;
+  --danger: #b3261e;
+  --danger-soft: #fbe4e2;
+  --info: #2c5d9e;
+  --info-soft: #e2ebf8;
+
+  --radius-s: 6px;
+  --radius-m: 10px;
+  --radius-l: 16px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --shadow: 0 1px 2px rgb(20 20 30 / 6%), 0 4px 16px rgb(20 20 30 / 6%);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12141a;
+    --surface: #1a1d25;
+    --surface-2: #232733;
+    --border: #2f3442;
+    --text: #eceef3;
+    --text-muted: #a3a9b8;
+    --accent: #f08fb0;
+    --accent-soft: #3a2230;
+    --accent-text: #1b1f2a;
+    --ok: #7fd3a0;
+    --ok-soft: #1d3327;
+    --warn: #f0c46b;
+    --warn-soft: #3a2f17;
+    --danger: #ff8a80;
+    --danger-soft: #3d1f1d;
+    --info: #8db8f2;
+    --info-soft: #1d2a3d;
+    --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 4px 16px rgb(0 0 0 / 25%);
+    color-scheme: dark;
+  }
+}
