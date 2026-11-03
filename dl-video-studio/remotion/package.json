@@ -1,0 +1,40 @@
+{
+  "name": "dl-remotion-preview",
+  "version": "1.0.0",
+  "description": "DL Video Studio live preview: code-built motion graphics and UI animation in Remotion Studio.",
+  "repository": {},
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.537",
+    "@remotion/zod-types": "4.0.537",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "remotion": "4.0.537",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.537",
+    "@types/react": "19.2.18",
+    "@types/web": "0.0.166",
+    "eslint": "10.12.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion bundle",
+    "upgrade": "remotion upgrade",
+    "lint": "eslint src && tsc",
+    "render:test": "remotion render IdeaToPlan-4x5 ../exports/test-4x5.mp4 --scale=0.5 --frames=0-89"
+  },
+  "allowScripts": {
+    "esbuild": false
+  },
+  "overrides": {
+    "zod": "$zod"
+  }
+}

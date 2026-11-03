@@ -26,3 +26,12 @@ Concepts, scenes, shots, prompts, assets and checklist items share one `workspac
 
 ## D-009 — Linked items can't be deleted (2026-11-03)
 Deleting a scene used by a shot (or a shot used by a prompt or asset) is refused with a clear message instead of silently leaving broken links. This follows the handbook's rule never to silently lose data.
+
+## D-010 — Remotion in its own `remotion/` package; only the core packages (2026-11-03)
+The user approved installing Remotion. Only what the preview needs was installed: `remotion`, `@remotion/cli`, `@remotion/zod-types` and `zod`, plus the scaffold's dev tools. Not every Remotion repo or package: most are examples or optional features, and the handbook warns against blanket installs. More packages (captions, transitions, media, fonts) get added when a video actually needs them. The preview lives in its own folder with its own `package.json`, so the main app keeps zero dependencies.
+
+## D-011 — Pin to releases at least two weeks old (2026-11-03)
+Remotion 4.0.540 was released the day before install, so 4.0.537 (2026-10-19) was pinned instead, and React 19.2.9 likewise. Brand-new releases are more likely to be pulled or patched. Exception: `zod` 4.6.7 is forced via `overrides` to close a high-severity advisory. That's the same version Remotion 4.0.540 adopted, so it's a known-good combination. Plan: move to Remotion ≥4.0.540 after 2026-11-16.
+
+## D-012 — Vendored official Remotion Agent Skills (2026-11-03)
+Remotion's official skills were cloned from remotion-dev/skills, reviewed (markdown instructions and example code; nothing runs on its own), and copied into `.claude/skills/`. That way Claude Code follows Remotion's best practices in any session in this repo, on the cloud or on the user's machine. The third-party `npx skills` installer wasn't used.

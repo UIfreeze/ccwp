@@ -13,6 +13,8 @@ Implemented in Milestone 1 and covered by tests in `tests/`:
 - JSON bodies limited to 256 KB. Text fields have length limits.
 - The server binds to `127.0.0.1` by default.
 
+Remotion preview (`remotion/`): every dependency is pinned to an exact version and the lockfile is committed. `npm audit --omit=dev` reports 0 known vulnerabilities. One moderate advisory remains in dev-only lint tooling (minimatch via eslint); it doesn't affect the preview or rendering. Studio binds to localhost.
+
 Still to do: upload validation (M6), media access control (M4), backups and restore (M8), dependency review when packages are introduced, and HTTPS deployment (M10, only with approval).
 
 Never commit secrets, client media or the private handbook. `.gitignore` excludes `data/`, `exports/`, `.env`, video and audio files, and `docs/private/`.

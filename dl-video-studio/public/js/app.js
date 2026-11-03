@@ -6,13 +6,14 @@ import { dashboardView } from './views/dashboard.js';
 import { projectFormView } from './views/project-form.js';
 import { projectView } from './views/project.js';
 import { plannedView } from './views/planned.js';
+import { previewView } from './views/preview.js';
 
 const root = document.getElementById('app');
 const state = { user: null, options: null };
 
 const NAV = [
   { href: '#/projects', label: 'Projects', match: /^\/projects/ },
-  { href: '#/preview', label: 'Live preview', soon: 'M3', match: /^\/preview/ },
+  { href: '#/preview', label: 'Live preview', match: /^\/preview/ },
   { href: '#/review', label: 'Review Studio', soon: 'M4', match: /^\/review/ },
   { href: '#/assets', label: 'Asset library', soon: 'M6', match: /^\/assets/ },
   { href: '#/knowledge', label: 'Knowledge base', soon: 'M7', match: /^\/knowledge/ },
@@ -23,7 +24,8 @@ const ROUTES = [
   [/^\/projects\/new$/, () => projectFormView(ctx())],
   [/^\/projects\/([\w-]+)\/edit$/, (id) => projectFormView(ctx(), id)],
   [/^\/projects\/([\w-]+)(?:\/(concepts|script|shots|prompts|assets|checklist))?$/, (id, tab) => projectView(ctx(), id, tab)],
-  [/^\/(preview|review|assets|knowledge)$/, (key) => plannedView(key)],
+  [/^\/preview$/, () => previewView()],
+  [/^\/(review|assets|knowledge)$/, (key) => plannedView(key)],
 ];
 
 function ctx() {

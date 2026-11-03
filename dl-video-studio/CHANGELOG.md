@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 — 2026-11-03 — Milestone 3: Remotion live preview
+
+### Added
+- `remotion/`: a Remotion Studio project scaffolded with the official `create-video` tool, with versions pinned (Remotion 4.0.537, React 19.2.9).
+- An original 22-second sample, "IdeaToPlan" (hook → questions → plan → CTA), with layouts adapted to 4:5, 9:16, 1:1 and 16:9.
+- Editable fields in the Studio sidebar (text, list items, colours, safe-area toggle), with default values inline so edits save back to code.
+- A safe-area overlay, including the 9:16 zones covered by platform buttons.
+- `npm run render:test` for a half-size test MP4. Verified: H.264, 30fps, 22.0s.
+- The app's "Live preview" page now has launch steps, a format list, export and licence notes.
+- The 13 official Remotion Agent Skills, copied into `.claude/skills/` (from remotion-dev/skills).
+
+### Security
+- `zod` forced to 4.6.7 to fix GHSA-mrhx-c7xc-m3w5 in the zod bundled with Remotion 4.0.537. The packages the preview runs on now report 0 known vulnerabilities.
+
 ## 0.2.0 — 2026-11-03 — Milestone 2: production workspace
 
 ### Added

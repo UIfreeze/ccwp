@@ -1,11 +1,6 @@
 import { h } from '../dom.js';
 
 const PLANNED = {
-  preview: {
-    title: 'Live preview', milestone: 'Milestone 3',
-    body: 'A Remotion Studio browser preview for code-built motion graphics and animated UI, with 4:5 and 9:16 templates. This is a preview surface, not a full editing timeline.',
-    blocked: 'Needs your approval to install Remotion (npm packages). Remotion’s licence is free for individuals and companies of up to three people; larger companies need a paid company licence — please confirm which applies to DL.',
-  },
   review: {
     title: 'DL Review Studio', milestone: 'Milestone 4',
     body: 'In-house review: browser video player with visible timecode, timestamped comments and replies, immutable versions, version switching, approval states and an audit trail.',
