@@ -2,12 +2,86 @@ import React from "react";
 import { Composition, Folder } from "remotion";
 import { IdeaToPlan } from "./IdeaToPlan/IdeaToPlan";
 import { ideaToPlanSchema, TOTAL_SECONDS } from "./IdeaToPlan/schema";
+import { Decipher } from "./Decipher/Decipher";
+import { decipherSchema, DECIPHER_SECONDS } from "./Decipher/schema";
 
 const FPS = 30;
 
 // One composition per delivery format. LinkedIn 4:5 and Instagram/Shorts 9:16 are primary.
 export const RemotionRoot: React.FC = () => {
   return (
+    <>
+    <Folder name="Deciphered-DEMO">
+      <Composition
+        id="Deciphered-16x9"
+        component={Decipher}
+        durationInFrames={DECIPHER_SECONDS * FPS}
+        fps={FPS}
+        width={1920}
+        height={1080}
+        schema={decipherSchema}
+        defaultProps={{
+          chaosCaption: "Notes. Voice memos. Open questions.",
+          gridCaption: "Deciphered into one plan",
+          deliverables: ["User flows", "Wireframes", "UI screens", "Data model", "API plan", "Architecture", "Sprint roadmap", "Cost range", "Risk register", "Test plan", "Tech stack", "Clickable prototype"],
+          tagline: "Every idea. One clear plan.",
+          brandName: "Deciphering Logic",
+          showPlaceholderNotice: true,
+          background: "#040706",
+          glow: "#2ee6b8",
+          glowSoft: "#0f5c4c",
+          warm: "#f2b45a",
+          withSound: true,
+          showSafeArea: false,
+        }}
+      />
+      <Composition
+        id="Deciphered-4x5"
+        component={Decipher}
+        durationInFrames={DECIPHER_SECONDS * FPS}
+        fps={FPS}
+        width={1080}
+        height={1350}
+        schema={decipherSchema}
+        defaultProps={{
+          chaosCaption: "Notes. Voice memos. Open questions.",
+          gridCaption: "Deciphered into one plan",
+          deliverables: ["User flows", "Wireframes", "UI screens", "Data model", "API plan", "Architecture", "Sprint roadmap", "Cost range", "Risk register", "Test plan", "Tech stack", "Clickable prototype"],
+          tagline: "Every idea. One clear plan.",
+          brandName: "Deciphering Logic",
+          showPlaceholderNotice: true,
+          background: "#040706",
+          glow: "#2ee6b8",
+          glowSoft: "#0f5c4c",
+          warm: "#f2b45a",
+          withSound: true,
+          showSafeArea: false,
+        }}
+      />
+      <Composition
+        id="Deciphered-9x16"
+        component={Decipher}
+        durationInFrames={DECIPHER_SECONDS * FPS}
+        fps={FPS}
+        width={1080}
+        height={1920}
+        schema={decipherSchema}
+        defaultProps={{
+          chaosCaption: "Notes. Voice memos. Open questions.",
+          gridCaption: "Deciphered into one plan",
+          deliverables: ["User flows", "Wireframes", "UI screens", "Data model", "API plan", "Architecture", "Sprint roadmap", "Cost range", "Risk register", "Test plan", "Tech stack", "Clickable prototype"],
+          tagline: "Every idea. One clear plan.",
+          brandName: "Deciphering Logic",
+          showPlaceholderNotice: true,
+          background: "#040706",
+          glow: "#2ee6b8",
+          glowSoft: "#0f5c4c",
+          warm: "#f2b45a",
+          withSound: true,
+          showSafeArea: false,
+        }}
+      />
+    </Folder>
     <Folder name="IdeaToPlan-DEMO">
       <Composition
         id="IdeaToPlan-4x5"
@@ -110,5 +184,6 @@ export const RemotionRoot: React.FC = () => {
         }}
       />
     </Folder>
+    </>
   );
 };

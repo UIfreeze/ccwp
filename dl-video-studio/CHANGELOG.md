@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 — 2026-11-03 — "Deciphered" style piece
+
+### Added
+- "Deciphered": an original 35s cinematic piece (16:9, 4:5, 9:16) styled after a user-supplied reference. Built entirely in code with no paid generation: a 3D-projected fragment orbit and vortex, logic core with shockwave and sparks, light-speed streaks and light trail, a CSS-3D deliverables grid with scan beam, a fly-through card tunnel, a glass blueprint hero, and particles forming the mark on a reflective floor with fog.
+- Original procedural sound design (`npm run sound`), timed to the picture and following the reference's dynamic arc.
+- Editable captions, deliverables, tagline, brand name, colours and toggles in Studio.
+
 ## 0.3.0 — 2026-11-03 — Milestone 3: Remotion live preview
 
 ### Added

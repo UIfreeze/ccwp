@@ -35,3 +35,9 @@ Remotion 4.0.540 was released the day before install, so 4.0.537 (2026-10-19) wa
 
 ## D-012 — Vendored official Remotion Agent Skills (2026-11-03)
 Remotion's official skills were cloned from remotion-dev/skills, reviewed (markdown instructions and example code; nothing runs on its own), and copied into `.claude/skills/`. That way Claude Code follows Remotion's best practices in any session in this repo, on the cloud or on the user's machine. The third-party `npx skills` installer wasn't used.
+
+## D-013 — Using a third-party video as a style reference (2026-11-03)
+The user supplied a 35s cinematic ad for another brand and asked for something new in that style. Following the handbook, we reproduced the visual grammar (palette, glass materials, camera energy, the chaos → core → order → logo structure and the sound arc) and none of the expression. No footage, logo, tagline, icons, third-party app logos or music were reused, and DL's own message drives the story. The reference file isn't committed to the public repo. Its opening shot (a person at a desk) is AI-generated video; recreating that kind of shot would need a paid generation with individual approval, so the piece opens on abstract 3D instead.
+
+## D-014 — Procedural, original sound instead of library music (2026-11-03)
+For the sound, a dependency-free generator synthesises every effect, so there are no licensing questions and no credits spent. The audio file is regenerated on demand and not stored in git. Licensed music or SFX can replace it later through the normal approval gate.

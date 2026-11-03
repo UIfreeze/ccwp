@@ -40,3 +40,4 @@ Columns to fill when inspected: title, creator, timestamp or section, category, 
 | DR-02 | Google Drive | (private) | Pending | Folder 02 |
 | DR-03 | Google Drive | (private) | Pending | “Full workflow” file |
 | WEB-01 | Website | (kept with private list) | Pending | Aksy Official |
+| USER-REF-02 | Uploaded video | (local only, not committed) | Inspected 2026-11-03 | Third-party cinematic product ad, 35s. Style reference for "Deciphered"; see LEARNING_LOG. Brand assets not reused. |

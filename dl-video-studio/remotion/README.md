@@ -23,10 +23,29 @@ All text, list items and colours are editable in Studio's right-hand panel, and 
 
 Scenes: Hook (4s) → Questions (6s) → Plan (8s) → CTA (4s). Scene lengths are in `src/IdeaToPlan/schema.ts`.
 
+## Deciphered (35s, 30fps, synthetic demo)
+
+An original DL piece styled after a user-supplied cinematic reference (dark teal world, glass cards, chaos → core → order → logo). It's DL's own message and assets: no footage, logos, icons, tagline or music were taken from the reference.
+
+| Composition | Size |
+| --- | --- |
+| Deciphered-16x9 | 1920 × 1080 (matches the reference) |
+| Deciphered-4x5 | 1080 × 1350 |
+| Deciphered-9x16 | 1080 × 1920 |
+
+Scenes (`src/Decipher/schema.ts`): chaos of a founder's inputs → vortex into the logic core (impact at 9.4s) → light-speed decode beam and ring → deliverables lock into a 3D grid with a scan beam → fly-through tunnel → glass blueprint hero → dip to black → particles form the mark on a reflective floor → tagline.
+
+Editable in Studio: captions, the 12 deliverables (icons follow the wording), tagline, brand name, colours, sound on/off, safe-area guide, and the placeholder notice.
+
+**The mark is a placeholder monogram.** Replace it with DL's official logo file before any public use. The video shows a small "placeholder" notice until you switch that off.
+
+**Sound** is original and procedural: `scripts/make-sound.mjs` synthesises the drone, risers, impacts, whooshes, ticks, kicks, bells and pad, timed to the picture. It's created automatically as `public/decipher-sound.wav` (not stored in git) by `npm run dev` or the render scripts, or manually with `npm run sound`. Replace or supplement it with licensed music and SFX after approval.
+
 ## Export
 
 ```bash
-npm run render:test   # half-size 4:5 test MP4 → ../exports/test-4x5.mp4
+npm run render:test         # half-size 4:5 test MP4 → ../exports/test-4x5.mp4
+npm run render:deciphered   # full 1080p Deciphered → ../exports/deciphered-16x9.mp4 (about 4 min)
 ```
 
 The first render downloads Remotion's headless browser (about 100 MB, one time). Full-size final exports follow an approved export plan.
