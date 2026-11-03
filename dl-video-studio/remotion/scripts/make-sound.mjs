@@ -8,8 +8,8 @@ const OUT = join(dirname(fileURLToPath(import.meta.url)), "..", "public", "decip
 if (process.argv.includes("--if-missing") && existsSync(OUT)) process.exit(0);
 
 const SR = 48000;
-const DUR = 35;
-const N = SR * DUR;
+const DUR = 37.5;
+const N = Math.round(SR * DUR);
 const L = new Float32Array(N);
 const R = new Float32Array(N);
 
@@ -137,9 +137,11 @@ pad(24.9, 27.9, [220, 277.2, 329.6], 0.12, 0.6, 0.7);
 // 27.9–28.4: near silence (the dip)
 sparkle(28.35, 30.2, 30, 0.07); riser(28.6, 30.4, 0.45, 200, 5000);
 impact(30.4, 1.0); bell(30.42, 392, 0.35, 3.5); bell(30.45, 587.3, 0.2, 3.5, 0.3);
-pad(30.4, 35, [98, 146.8, 196, 293.7], 0.2, 0.05, 3.2);
+pad(30.4, 37.2, [98, 146.8, 196, 293.7], 0.2, 0.05, 3.0);
 bell(31.25, 783.99, 0.12, 2, -0.3); bell(31.95, 987.77, 0.1, 2, 0.3);
 riser(32.0, 33.3, 0.08, 3000, 9000);              // light sweep
+riser(34.5, 35.4, 0.12, 2000, 9000);              // bloom to the white end card
+bell(35.2, 1046.5, 0.16, 3); bell(35.25, 1318.5, 0.09, 3, 0.2); // end card
 
 // ---- Master: soft clip, normalise, fades, 16-bit stereo WAV ----
 let peak = 0;

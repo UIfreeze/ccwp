@@ -1,14 +1,14 @@
 import React from "react";
-import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Easing, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { WordReveal } from "./WordReveal";
 import { useLayout } from "./layout";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
-export const CtaScene: React.FC<{ headline: string; button: string; logo: string; dark: string; accent: string }> = ({
+export const CtaScene: React.FC<{ headline: string; button: string; showLogo: boolean; dark: string; accent: string }> = ({
   headline,
   button,
-  logo,
+  showLogo,
   dark,
   accent,
 }) => {
@@ -45,20 +45,13 @@ export const CtaScene: React.FC<{ headline: string; button: string; logo: string
       >
         {button}
       </div>
-      <div
-        style={{
-          position: "absolute",
-          bottom: L.safeY,
-          fontSize: 26 * L.u,
-          color: "#ffffff99",
-          border: `${2 * L.u}px dashed #ffffff55`,
-          borderRadius: 12 * L.u,
-          padding: `${12 * L.u}px ${22 * L.u}px`,
-          opacity: interpolate(frame, [1.7 * fps, 2.1 * fps], [0, 1], clamp),
-        }}
-      >
-        {logo}
-      </div>
+      {showLogo ? (
+        // Official DL mark (its dark-green tile matches the brand dark background).
+        <Img
+          src={staticFile("brand/dl-mark-on-dark.png")}
+          style={{ position: "absolute", bottom: L.safeY - 30 * L.u, width: 150 * L.u, height: 150 * L.u, opacity: interpolate(frame, [1.7 * fps, 2.1 * fps], [0, 1], clamp) }}
+        />
+      ) : null}
     </AbsoluteFill>
   );
 };

@@ -6,7 +6,7 @@ import { Hyperspace } from "./Hyperspace";
 import { BlueprintGrid } from "./BlueprintGrid";
 import { Tunnel } from "./Tunnel";
 import { Hero } from "./Hero";
-import { LogoReveal } from "./LogoReveal";
+import { EndCard, LogoReveal } from "./LogoReveal";
 import { SafeArea } from "../IdeaToPlan/SafeArea";
 
 /**
@@ -15,7 +15,10 @@ import { SafeArea } from "../IdeaToPlan/SafeArea";
  */
 export const Decipher: React.FC<DecipherProps> = (p) => {
   const { fps } = useVideoConfig();
+  const { durationInFrames } = useVideoConfig();
   const seq = (k: keyof typeof T) => ({ from: Math.round(T[k][0] * fps), durationInFrames: Math.round((T[k][1] - T[k][0]) * fps) });
+  // Without the end card, the logo scene simply holds to the end.
+  const logoSeq = p.endCard ? seq("logo") : { from: seq("logo").from, durationInFrames: durationInFrames - seq("logo").from };
   return (
     <AbsoluteFill style={{ background: p.background, fontFamily: '"Helvetica Neue", "Segoe UI", Arial, sans-serif' }}>
       <Sequence name="Chaos → core" {...seq("chaos")}>
@@ -33,9 +36,14 @@ export const Decipher: React.FC<DecipherProps> = (p) => {
       <Sequence name="Hero" {...seq("hero")}>
         <Hero glow={p.glow} glowSoft={p.glowSoft} warm={p.warm} />
       </Sequence>
-      <Sequence name="Mark" {...seq("logo")}>
-        <LogoReveal glow={p.glow} glowSoft={p.glowSoft} tagline={p.tagline} brandName={p.brandName} showPlaceholderNotice={p.showPlaceholderNotice} />
+      <Sequence name="Mark" {...logoSeq}>
+        <LogoReveal glow={p.glow} glowSoft={p.glowSoft} tagline={p.tagline} bloomToEndCard={p.endCard} />
       </Sequence>
+      {p.endCard ? (
+        <Sequence name="End card" {...seq("end")}>
+          <EndCard />
+        </Sequence>
+      ) : null}
       {p.withSound ? <Html5Audio src={staticFile("decipher-sound.wav")} /> : null}
       {p.showSafeArea ? <SafeArea /> : null}
     </AbsoluteFill>

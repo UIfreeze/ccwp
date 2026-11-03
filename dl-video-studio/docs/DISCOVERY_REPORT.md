@@ -25,7 +25,7 @@ Inspected in the Claude Code cloud session, not on your own computer. The checks
 1. **Repo visibility.** The repo is public, so the handbook isn't committed: it contains DL pricing, plans and private Drive/Docs/Notion links. Keep it at `docs/private/` (git-ignored), or make the repo private.
 2. **Remotion licence (Milestone 3).** Remotion is free for individuals and companies of up to three people. Larger companies need a paid company licence. Please confirm DL's size and approve installing it.
 3. **Timeline editor:** answered — DaVinci Resolve (see DECISIONS D-007). Edition and version still to confirm.
-4. **Brand.** Please supply DL's official logo, fonts and colour values. The current palette is a placeholder.
+4. **Brand:** official logo received (mark plus light-background lockup). Brand fonts and an SVG or reversed lockup are still needed.
 5. **Private references.** Drive, Docs and Notion links need an authorised connector or exported copies.
 
 ## Safe next milestone

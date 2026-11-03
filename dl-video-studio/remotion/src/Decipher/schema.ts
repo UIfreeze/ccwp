@@ -9,8 +9,7 @@ export const decipherSchema = z.object({
   gridCaption: z.string(),
   deliverables: z.array(z.string()).min(4).max(12),
   tagline: z.string(),
-  brandName: z.string(),
-  showPlaceholderNotice: z.boolean(),
+  endCard: z.boolean(),
   background: zColor(),
   glow: zColor(),
   glowSoft: zColor(),
@@ -27,6 +26,7 @@ export const T = {
   grid: [14.0, 19.9],
   tunnel: [19.4, 24.9],
   hero: [24.4, 28.3],
-  logo: [28.0, 35.0],
+  logo: [28.0, 35.4],
+  end: [34.8, 37.5],
 } as const;
-export const DECIPHER_SECONDS = 35;
+export const DECIPHER_SECONDS = 37.5;

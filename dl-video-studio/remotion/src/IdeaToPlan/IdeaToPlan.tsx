@@ -11,7 +11,7 @@ import { SafeArea } from "./SafeArea";
 
 /**
  * Original DL sample: an idea attracts questions, the questions collapse into a plan, then a CTA.
- * SYNTHETIC demo content — copy, colours and logo are placeholders until approved.
+ * SYNTHETIC demo content — copy is a placeholder until approved; logo and colours are DL's official ones.
  */
 export const IdeaToPlan: React.FC<IdeaToPlanProps> = (props) => {
   const { fps } = useVideoConfig();
@@ -35,7 +35,7 @@ export const IdeaToPlan: React.FC<IdeaToPlanProps> = (props) => {
           <PlanScene headline={props.planHeadline} items={props.planItems} ink={props.ink} accent={props.accent} />
         </Series.Sequence>
         <Series.Sequence name="CTA" durationInFrames={SCENES.cta * fps}>
-          <CtaScene headline={props.ctaHeadline} button={props.ctaButton} logo={props.logoPlaceholder} dark={props.dark} accent={props.accent} />
+          <CtaScene headline={props.ctaHeadline} button={props.ctaButton} showLogo={props.showLogo} dark={props.dark} accent={props.accent} />
         </Series.Sequence>
       </Series>
       {props.showSafeArea ? <SafeArea /> : null}

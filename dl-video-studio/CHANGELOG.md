@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 — 2026-11-03 — Official DL logo and brand colours
+
+### Changed
+- Added the official DL logo files supplied by the user (`remotion/public/brand/`), byte-identical to what was sent and never redrawn or recoloured.
+- "Deciphered": particles converge on points sampled from the official mark, then the official mark is revealed on the reflective floor, followed by a new white end card (2.5s) with the full official lockup. Now 37.5s. The placeholder monogram and notice are gone, and the warm accent is now DL crimson.
+- "IdeaToPlan": the CTA shows the official mark, and colours switched to DL crimson #c93a5f and dark green #182420.
+- App design tokens and favicon now use the brand colours.
+- Sound extended for the end card (bloom riser and soft chime).
+
 ## 0.4.0 — 2026-11-03 — "Deciphered" style piece
 
 ### Added
