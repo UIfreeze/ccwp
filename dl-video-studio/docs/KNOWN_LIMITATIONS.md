@@ -8,4 +8,4 @@
 - **Single process / single machine.** No backups yet. Backup and restore get documented and tested in Milestone 8.
 - **HTTPS:** none locally. Set `DLVS_SECURE_COOKIES=1` when running behind HTTPS.
 - **Projects can't be deleted.** Only archived, by design for now, to protect the audit trail.
-- **Installed editors** were checked only in the cloud container, not on your machine.
+- **Timeline editor:** DaVinci Resolve (user-confirmed). Edition (free or Studio) and version still unknown; that decides whether direct scripting is possible or handoff stays file-based.

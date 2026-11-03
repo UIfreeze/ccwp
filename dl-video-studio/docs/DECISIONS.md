@@ -17,3 +17,6 @@ There's no self-signup and no email invites yet, so no email provider is needed 
 
 ## D-006 — Handbook and private reference links stay out of the public repo (2026-11-03)
 The repo is public. The handbook (pricing, internal plans) and the Drive, Docs and Notion URLs are kept local in the git-ignored `docs/private/`. Public YouTube and Instagram URLs are listed in the reference register.
+
+## D-007 — DaVinci Resolve is the primary timeline editor (2026-11-03)
+The user confirmed DaVinci Resolve is installed on their machine. Resolve is the professional timeline for full edit, colour, audio and finishing. Remotion stays the live preview for code-built scenes, and DL Review Studio handles review and approval. The handoff plan is to export an organised media package plus a timeline interchange file (FCPXML/EDL/OTIO) that Resolve imports; both the free and Studio editions support this. Driving Resolve directly through its scripting API depends on the edition and settings, so that waits until the edition and version are confirmed. Nothing is installed or purchased.
