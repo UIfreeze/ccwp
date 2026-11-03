@@ -30,7 +30,10 @@ export const RemotionRoot: React.FC = () => {
           glow: "#2ee6b8",
           glowSoft: "#0f5c4c",
           warm: "#c93a5f",
-          withSound: true,
+          sound: "library",
+          sfxVolume: 1,
+          musicVolume: 0.8,
+          musicStart: 0,
           showSafeArea: false,
         }}
       />
@@ -52,7 +55,10 @@ export const RemotionRoot: React.FC = () => {
           glow: "#2ee6b8",
           glowSoft: "#0f5c4c",
           warm: "#c93a5f",
-          withSound: true,
+          sound: "library",
+          sfxVolume: 1,
+          musicVolume: 0.8,
+          musicStart: 0,
           showSafeArea: false,
         }}
       />
@@ -74,7 +80,10 @@ export const RemotionRoot: React.FC = () => {
           glow: "#2ee6b8",
           glowSoft: "#0f5c4c",
           warm: "#c93a5f",
-          withSound: true,
+          sound: "library",
+          sfxVolume: 1,
+          musicVolume: 0.8,
+          musicStart: 0,
           showSafeArea: false,
         }}
       />

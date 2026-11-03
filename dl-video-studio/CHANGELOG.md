@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 — 2026-11-03 — Professional sound design (library SFX)
+
+### Changed
+- "Deciphered" now defaults to `sound: "library"`: 16 licensed Artlist SFX on a frame-accurate cue sheet (`src/Decipher/sound.ts`), with volume envelopes, cut fades, an optional auto-ducking music bed, and a Studio warning when files are missing. The synthesised track is kept as `sound: "synth"`.
+- `npm run render:deciphered` now masters the audio after rendering (two-pass loudnorm to −14 LUFS / −1.5 dBTP, video stream copied, faststart), using Remotion's bundled FFmpeg.
+- Licensed audio in `public/sfx/` is git-ignored. See `docs/SFX_CUE_SHEET.md`.
+- Verified cue timing with placeholder tones (deleted afterwards).
+
 ## 0.5.0 — 2026-11-03 — Official DL logo and brand colours
 
 ### Changed

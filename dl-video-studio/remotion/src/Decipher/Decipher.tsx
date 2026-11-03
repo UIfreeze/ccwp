@@ -8,6 +8,7 @@ import { Tunnel } from "./Tunnel";
 import { Hero } from "./Hero";
 import { EndCard, LogoReveal } from "./LogoReveal";
 import { SafeArea } from "../IdeaToPlan/SafeArea";
+import { LibrarySound } from "./SoundTrack";
 
 /**
  * "Deciphered" — original DL piece (synthetic demo).
@@ -44,7 +45,8 @@ export const Decipher: React.FC<DecipherProps> = (p) => {
           <EndCard />
         </Sequence>
       ) : null}
-      {p.withSound ? <Html5Audio src={staticFile("decipher-sound.wav")} /> : null}
+      {p.sound === "library" ? <LibrarySound sfxVolume={p.sfxVolume} musicVolume={p.musicVolume} musicStart={p.musicStart} /> : null}
+      {p.sound === "synth" ? <Html5Audio src={staticFile("decipher-sound.wav")} /> : null}
       {p.showSafeArea ? <SafeArea /> : null}
     </AbsoluteFill>
   );

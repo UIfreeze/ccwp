@@ -44,3 +44,6 @@ For the sound, a dependency-free generator synthesises every effect, so there ar
 
 ## D-015 — How the official logo is used (2026-11-03)
 The user supplied two official files. Following the handbook rule never to regenerate the logo, both are used exactly as supplied. The dark-tile mark appears in dark scenes. The full lockup, which has dark-green elements on a transparent background, appears only on white, where it's legible as designed, rather than being recoloured for a dark background. Particle effects only *approach* the logo's shape and then hand over to the real file. Brand colours were read from the files: crimson #c93a5f and dark green #182420. The logo files are committed to this public repo because they're DL's public identity; tell me if that should change.
+
+## D-016 — Library SFX instead of synthesis (2026-11-03)
+The user rejected the procedural sound as unprofessional. Free CC0 sources (Openverse, Freesound, Sonniss) and Artlist's audio hosts are blocked by this cloud environment's network policy, so the sound is a cue sheet of Artlist catalog SFX (included in the user's plan, no AI credits) that plays whatever files are present. Licensed files are never committed (public repo, licence terms). Picks are based on catalog descriptions and label reputation until someone can listen to them.

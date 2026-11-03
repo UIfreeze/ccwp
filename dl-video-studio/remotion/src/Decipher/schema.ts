@@ -14,7 +14,10 @@ export const decipherSchema = z.object({
   glow: zColor(),
   glowSoft: zColor(),
   warm: zColor(),
-  withSound: z.boolean(),
+  sound: z.enum(["library", "synth", "off"]),
+  sfxVolume: z.number().min(0).max(2),
+  musicVolume: z.number().min(0).max(2),
+  musicStart: z.number().min(0).max(600),
   showSafeArea: z.boolean(),
 });
 export type DecipherProps = z.infer<typeof decipherSchema>;

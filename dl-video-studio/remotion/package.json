@@ -25,13 +25,13 @@
     "typescript": "5.9.3"
   },
   "scripts": {
-    "dev": "node scripts/make-sound.mjs --if-missing && remotion studio",
+    "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
     "render:test": "node scripts/make-sound.mjs --if-missing && remotion render IdeaToPlan-4x5 ../exports/test-4x5.mp4 --scale=0.5 --frames=0-89",
     "sound": "node scripts/make-sound.mjs",
-    "render:deciphered": "node scripts/make-sound.mjs --if-missing && remotion render Deciphered-16x9 ../exports/deciphered-16x9.mp4"
+    "render:deciphered": "remotion render Deciphered-16x9 ../exports/deciphered-16x9-raw.mp4 && node scripts/finish-audio.mjs ../exports/deciphered-16x9-raw.mp4 ../exports/deciphered-16x9.mp4"
   },
   "allowScripts": {
     "esbuild": false
