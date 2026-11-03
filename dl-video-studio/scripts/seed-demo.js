@@ -1,10 +1,11 @@
 // Seeds clearly-labelled SYNTHETIC demo data for local exploration. Refuses to run on a non-empty database.
 // All demo accounts share the password in DLVS_DEMO_PASSWORD (default: "demo-password-123").
+import { fileURLToPath } from 'node:url';
 import { openDatabase } from '../server/db.js';
 import { createUser } from '../server/auth.js';
 import { createProject, addMember, updateProject } from '../server/projects.js';
 
-const db = openDatabase(process.env.DLVS_DB || new URL('../data/studio.sqlite', import.meta.url).pathname);
+const db = openDatabase(process.env.DLVS_DB || fileURLToPath(new URL('../data/studio.sqlite', import.meta.url)));
 if (db.prepare('SELECT COUNT(*) AS n FROM users').get().n) {
   console.error('Database already has accounts; demo seed skipped so nothing is overwritten.');
   process.exit(1);

@@ -1,11 +1,12 @@
 // Entry point: `npm start`. Binds to localhost by default — the app is private and local-first.
+import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:http';
 import { openDatabase } from './db.js';
 import { createApp } from './app.js';
 
 const HOST = process.env.HOST || '127.0.0.1';
 const PORT = Number(process.env.PORT || 4310);
-const DB_FILE = process.env.DLVS_DB || new URL('../data/studio.sqlite', import.meta.url).pathname;
+const DB_FILE = process.env.DLVS_DB || fileURLToPath(new URL('../data/studio.sqlite', import.meta.url));
 
 const db = openDatabase(DB_FILE);
 const users = db.prepare('SELECT COUNT(*) AS n FROM users').get().n;

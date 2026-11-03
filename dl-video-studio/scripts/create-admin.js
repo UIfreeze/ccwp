@@ -1,5 +1,6 @@
 // Usage: npm run create-admin -- email "Full Name" [--member]
 // Prompts for a password (or reads DLVS_PASSWORD for non-interactive use). Never pass passwords as arguments.
+import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline/promises';
 import { openDatabase } from '../server/db.js';
 import { createUser } from '../server/auth.js';
@@ -19,7 +20,7 @@ if (!password || password.length < 10) {
   console.error('Password must be at least 10 characters.');
   process.exit(1);
 }
-const db = openDatabase(process.env.DLVS_DB || new URL('../data/studio.sqlite', import.meta.url).pathname);
+const db = openDatabase(process.env.DLVS_DB || fileURLToPath(new URL('../data/studio.sqlite', import.meta.url)));
 try {
   createUser(db, { email, name, password, systemRole: flag === '--member' ? 'member' : 'admin' });
   console.log(`Created ${flag === '--member' ? 'member' : 'admin'} account for ${email}.`);
