@@ -3,6 +3,8 @@ import { Composition, Folder } from "remotion";
 import { IdeaToPlan } from "./IdeaToPlan/IdeaToPlan";
 import { ideaToPlanSchema, TOTAL_SECONDS } from "./IdeaToPlan/schema";
 import { Decipher } from "./Decipher/Decipher";
+import { SiteTour, calculateSiteTourMetadata } from "./SiteTour/SiteTour";
+import { siteTourSchema } from "./SiteTour/types";
 import { decipherSchema, DECIPHER_SECONDS } from "./Decipher/schema";
 
 const FPS = 30;
@@ -11,6 +13,28 @@ const FPS = 30;
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+    <Folder name="SiteTour">
+      <Composition
+        id="SiteTour-16x9"
+        component={SiteTour}
+        durationInFrames={300}
+        fps={30}
+        width={1920}
+        height={1080}
+        schema={siteTourSchema}
+        calculateMetadata={calculateSiteTourMetadata}
+        defaultProps={{
+          introTitle: "A first look at our website",
+          introSub: "",
+          accessTitle: "How to get started",
+          maxPages: 6,
+          stopsPerPage: 2,
+          background: "#182420",
+          accent: "#c93a5f",
+          sound: "library",
+        }}
+      />
+    </Folder>
     <Folder name="Deciphered-DEMO">
       <Composition
         id="Deciphered-16x9"

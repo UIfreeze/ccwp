@@ -8,3 +8,4 @@ out
 public/decipher-sound.wav
 public/sfx/*
 !public/sfx/README.md
+public/site/

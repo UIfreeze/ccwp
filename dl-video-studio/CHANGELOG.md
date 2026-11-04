@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0 — 2026-11-04 — Website tour engine (SiteTour)
+
+### Added
+- `scripts/capture-site.mjs`: captures a real website (full-page and fold screenshots of the homepage and main nav pages, mobile view, real nav, headings, CTAs, sticky header).
+- `SiteTour-16x9` composition: an automatic guided tour from the capture. Browser fly-in with the typed URL, cursor hovers and clicks on real menu items, eased section-by-section scrolling with heading captions and zooms, page transitions with a loading bar, a phone beat, a "How to get started" panel and the official end card. Length is computed from the capture (`calculateMetadata`).
+- Verified end to end on a synthetic local sample site, which wasn't delivered or committed. **The real decipheringlogic.com capture is blocked by this environment's network policy.**
+
 ## 0.6.0 — 2026-11-03 — Professional sound design (library SFX)
 
 ### Changed

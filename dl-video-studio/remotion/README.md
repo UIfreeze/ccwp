@@ -45,6 +45,20 @@ The particle targets (`src/Decipher/markPoints.json`) were sampled from the mark
 
 **Sound** is original and procedural: `scripts/make-sound.mjs` synthesises the drone, risers, impacts, whooshes, ticks, kicks, bells and pad, timed to the picture. It's created automatically as `public/decipher-sound.wav` (not stored in git) by `npm run dev` or the render scripts, or manually with `npm run sound`. Replace or supplement it with licensed music and SFX after approval.
 
+## SiteTour (website tour for first-time visitors and clients)
+
+A guided tour of a **real** website, built only from a real capture. Nothing about the site is invented. Sequence: intro with the official mark → a browser window flies in, the address is typed and the site loads → the cursor hovers each real main-menu item → the homepage scrolls section by section, with captions quoting the site's own headings and gentle zooms → each main page is opened by clicking its real menu item → mobile view on a phone → a "How to get started" panel (the real URL, the real menu items and the site's own call-to-action label) → white end card with the official lockup and URL.
+
+```bash
+node scripts/capture-site.mjs https://www.decipheringlogic.com 7   # needs network access to the site + Playwright
+npm run dev                                                          # choose SiteTour-16x9
+npx remotion render SiteTour-16x9 ../exports/site-tour-raw.mp4 && node scripts/finish-audio.mjs ../exports/site-tour-raw.mp4 ../exports/site-tour.mp4
+```
+
+The capture writes `public/site/` (git-ignored): full-page and above-the-fold screenshots at 1.5× for every main page, a mobile screenshot, and `tour.json` with real menu items, headings, CTAs, sticky-header info and their positions. The video length adapts to the site (about 60–90s). Editable in Studio: intro title, how-to-access title, number of pages, sections per page, colours and sound. Optional UI sounds reuse the Artlist files in `public/sfx/` and stay silent if they're missing.
+
+On your own computer, Playwright is needed once: `npm i -D playwright@1.56.1 && npx playwright install chromium`.
+
 ## Export
 
 ```bash
