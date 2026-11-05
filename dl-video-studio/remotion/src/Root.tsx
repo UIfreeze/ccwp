@@ -3,6 +3,7 @@ import { Composition, Folder } from "remotion";
 import { IdeaToPlan } from "./IdeaToPlan/IdeaToPlan";
 import { ideaToPlanSchema, TOTAL_SECONDS } from "./IdeaToPlan/schema";
 import { Decipher } from "./Decipher/Decipher";
+import { LyricReel, LYRIC_SECONDS } from "./LyricReel/LyricReel";
 import { SiteTour, calculateSiteTourMetadata } from "./SiteTour/SiteTour";
 import { siteTourSchema } from "./SiteTour/types";
 import { decipherSchema, DECIPHER_SECONDS } from "./Decipher/schema";
@@ -13,6 +14,9 @@ const FPS = 30;
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+    <Folder name="LyricReel">
+      <Composition id="IdeaSeUdaan-9x16" component={LyricReel} durationInFrames={LYRIC_SECONDS * 30} fps={30} width={1080} height={1920} />
+    </Folder>
     <Folder name="SiteTour">
       <Composition
         id="SiteTour-16x9"
